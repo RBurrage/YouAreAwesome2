@@ -16,34 +16,37 @@ struct ContentView: View {
 
     
     let messages = [
-        "Message 1",
-        "Message 2",
-        "Message 3",
-        "Message 4",
-        "Message 5",
-        "Message 6",
-        "Message 7",
-        "Message 8",
-        "Message 9",
-        "Message 10 is a message that takes up mor than one line."
+        "Personally, I enjoy Shakespeare.",
+        "Did someone say treats?",
+        "I love the wind in my hair!",
+        "Is this alomst over?",
+        "It's beach weather!!",
+        "The groomer can kiss my bum.",
+        "What? WHAT??!!",
+        "Water, anyone?",
+        "Waaaaaaaahhhh!!!!",
+        "If you try to take this, I will BITE you."
     ]
     
     var body: some View {
         
         VStack {
-            Spacer()
-            
-            Image(imageName)
-                .resizable()
-                .scaledToFit()
-                .clipShape(RoundedRectangle(cornerRadius: 30))
-                .shadow(radius: 30)
             
             Text(message)
                 .font(.largeTitle)
                 .fontWeight(.heavy)
                 .foregroundStyle(.red)
                 .multilineTextAlignment(.center)
+                .minimumScaleFactor(0.5)
+                .frame(height: 100)
+                .animation(.easeInOut(duration: 0.15), value: message)
+            
+            Image(imageName)
+                .resizable()
+                .scaledToFit()
+                .clipShape(RoundedRectangle(cornerRadius: 30))
+                .shadow(radius: 30)
+                .animation(.default, value: imageName)
             
             Spacer()
 
