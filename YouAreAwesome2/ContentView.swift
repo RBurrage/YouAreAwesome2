@@ -16,6 +16,7 @@ struct ContentView: View {
     @State private var lastImageNumber = -1
     @State private var lastSoundNumber = -1
     @State private var audioPlayer: AVAudioPlayer!
+    @State private var soundIsOn = true
     
     let numberOfImages = 10
     let numberOfSounds = 6
@@ -56,28 +57,45 @@ struct ContentView: View {
                 .shadow(radius: 30)
                 .animation(.default, value: imageName)
             
-            Spacer()
-            
-            Button("Show Message") {
-               
-                lastMessageNumber = nonRepeatingRandom(lastNumber: lastMessageNumber, upperBound: messages.count - 1)
-                message = messages[lastMessageNumber]
+            HStack {
+                Text("Sound On:")
+                Toggle("Sound On:", isOn: $soundIsOn)
+                    .labelsHidden()
+                    .onChange(of: soundIsOn) {
+                        if audioPlayer != nil && audioPlayer.isPlaying {
+                            audioPlayer.stop()
+                        }
+                    }
                 
-                lastImageNumber = nonRepeatingRandom(lastNumber: lastImageNumber, upperBound: numberOfImages - 1)
-                imageName = "image\(lastImageNumber)"
+                Spacer()
                 
-                lastSoundNumber = nonRepeatingRandom(lastNumber: lastSoundNumber, upperBound: numberOfSounds - 1)
-                playSound(soundName: "sound\(lastSoundNumber)")
-                
+                Button("Show Message") {
+                    
+                    lastMessageNumber = nonRepeatingRandom(lastNumber: lastMessageNumber, upperBound: messages.count - 1)
+                    message = messages[lastMessageNumber]
+                    
+                    lastImageNumber = nonRepeatingRandom(lastNumber: lastImageNumber, upperBound: numberOfImages - 1)
+                    imageName = "image\(lastImageNumber)"
+                    
+                    lastSoundNumber = nonRepeatingRandom(lastNumber: lastSoundNumber, upperBound: numberOfSounds - 1)
+                    
+                    if soundIsOn {
+                        playSound(soundName: "sound\(lastSoundNumber)")
+                    }
+                    
+                }
+                .buttonStyle(.borderedProminent)
+                .font(.title2)
             }
-            .buttonStyle(.borderedProminent)
-            .font(.title2)
             
         }
         .padding()
     }
     
-    func playSound(soundName: String) {
+    func playSound(soundName: String) {        
+        if audioPlayer != nil && audioPlayer.isPlaying {
+            audioPlayer.stop()
+        }
         guard let soundFile = NSDataAsset(name: soundName) else {
             print("😡 Could not read file named \(soundName)")
             return
